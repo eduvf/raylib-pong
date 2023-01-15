@@ -29,7 +29,7 @@ int main() {
 
   Ball ball;
   ball.x = WIDTH / 2.0f;
-  ball.y = WIDTH / 2.0f;
+  ball.y = HEIGHT / 2.0f;
   ball.radius = 3;
   ball.speedX = 100;
   ball.speedY = 100;
@@ -47,6 +47,8 @@ int main() {
   rightPaddle.width = 5;
   rightPaddle.height = 50;
   rightPaddle.speed = 200;
+
+  const char *winnerText = nullptr;
 
   while (!WindowShouldClose()) {
     ball.x += ball.speedX * GetFrameTime();
@@ -76,15 +78,33 @@ int main() {
     if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius,
                                 leftPaddle.GetRect())) {
       if (ball.speedX < 0) {
-        ball.speedX *= -1;
+        ball.speedX *= -1.1f;
+        ball.speedY =
+            (ball.y - leftPaddle.y) / (leftPaddle.height / 2) * ball.speedX;
       }
     };
     if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius,
                                 rightPaddle.GetRect())) {
       if (ball.speedX > 0) {
-        ball.speedX *= -1;
+        ball.speedX *= -1.1f;
+        ball.speedY =
+            (ball.y - rightPaddle.y) / (rightPaddle.height / 2) * ball.speedX;
       }
     };
+
+    if (ball.x < 0) {
+      winnerText = "RIGHT WINS";
+    }
+    if (ball.x > WIDTH) {
+      winnerText = "LEFT WINS";
+    }
+    if (winnerText && IsKeyPressed(KEY_SPACE)) {
+      ball.x = WIDTH / 2.0f;
+      ball.y = HEIGHT / 2.0f;
+      ball.speedX = 100;
+      ball.speedY = 100;
+      winnerText = nullptr;
+    }
 
     BeginDrawing();
     ClearBackground(WHITE);
@@ -92,6 +112,12 @@ int main() {
     ball.Draw();
     leftPaddle.Draw();
     rightPaddle.Draw();
+
+    if (winnerText) {
+      int textWidth = MeasureText(winnerText, 60);
+      DrawText(winnerText, WIDTH / 2 - textWidth / 2, HEIGHT / 2 - 30, 60,
+               BLACK);
+    }
 
     DrawFPS(0, 0);
     EndDrawing();
