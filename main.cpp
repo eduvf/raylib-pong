@@ -13,9 +13,11 @@ struct Paddle {
   float speed;
   float width, height;
 
-  void Draw() {
-    DrawRectangle(x - width / 2, y - height / 2, width, height, RED);
-  }
+  Rectangle GetRect() {
+    return Rectangle{x - width / 2, y - height / 2, width, height};
+  };
+
+  void Draw() { DrawRectangleRec(GetRect(), RED); }
 };
 
 int main() {
@@ -35,16 +37,16 @@ int main() {
   Paddle leftPaddle;
   leftPaddle.x = 20;
   leftPaddle.y = HEIGHT / 2.0f;
-  leftPaddle.width = 2;
+  leftPaddle.width = 5;
   leftPaddle.height = 50;
-  leftPaddle.speed = 300;
+  leftPaddle.speed = 200;
 
   Paddle rightPaddle;
   rightPaddle.x = WIDTH - 20;
   rightPaddle.y = HEIGHT / 2;
-  rightPaddle.width = 2;
+  rightPaddle.width = 5;
   rightPaddle.height = 50;
-  rightPaddle.speed = 300;
+  rightPaddle.speed = 200;
 
   while (!WindowShouldClose()) {
     ball.x += ball.speedX * GetFrameTime();
@@ -57,6 +59,32 @@ int main() {
       ball.y = HEIGHT;
       ball.speedY *= -1;
     }
+
+    if (IsKeyDown(KEY_W)) {
+      leftPaddle.y -= leftPaddle.speed * GetFrameTime();
+    }
+    if (IsKeyDown(KEY_S)) {
+      leftPaddle.y += leftPaddle.speed * GetFrameTime();
+    }
+    if (IsKeyDown(KEY_UP)) {
+      rightPaddle.y -= rightPaddle.speed * GetFrameTime();
+    }
+    if (IsKeyDown(KEY_DOWN)) {
+      rightPaddle.y += rightPaddle.speed * GetFrameTime();
+    }
+
+    if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius,
+                                leftPaddle.GetRect())) {
+      if (ball.speedX < 0) {
+        ball.speedX *= -1;
+      }
+    };
+    if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius,
+                                rightPaddle.GetRect())) {
+      if (ball.speedX > 0) {
+        ball.speedX *= -1;
+      }
+    };
 
     BeginDrawing();
     ClearBackground(WHITE);
