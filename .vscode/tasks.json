@@ -4,7 +4,7 @@
 		{
 			"label": "compile",
 			"type": "shell",
-			"command": "gcc main.cpp -lraylib -o bin/pong"
+			"command": "gcc main.cpp -lraylib -o bin/pong -g"
 		}
 	]
 }
