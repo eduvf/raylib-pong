@@ -8,6 +8,16 @@ struct Ball {
   void Draw() { DrawCircle((int)x, (int)y, radius, BLUE); }
 };
 
+struct Paddle {
+  float x, y;
+  float speed;
+  float width, height;
+
+  void Draw() {
+    DrawRectangle(x - width / 2, y - height / 2, width, height, RED);
+  }
+};
+
 int main() {
   InitWindow(512, 256, "pong");
   SetWindowState(FLAG_VSYNC_HINT);
@@ -21,6 +31,20 @@ int main() {
   ball.radius = 3;
   ball.speedX = 100;
   ball.speedY = 100;
+
+  Paddle leftPaddle;
+  leftPaddle.x = 20;
+  leftPaddle.y = HEIGHT / 2.0f;
+  leftPaddle.width = 2;
+  leftPaddle.height = 50;
+  leftPaddle.speed = 300;
+
+  Paddle rightPaddle;
+  rightPaddle.x = WIDTH - 20;
+  rightPaddle.y = HEIGHT / 2;
+  rightPaddle.width = 2;
+  rightPaddle.height = 50;
+  rightPaddle.speed = 300;
 
   while (!WindowShouldClose()) {
     ball.x += ball.speedX * GetFrameTime();
@@ -38,8 +62,8 @@ int main() {
     ClearBackground(WHITE);
 
     ball.Draw();
-    DrawRectangle(20, HEIGHT / 2 - 25, 2, 50, RED);
-    DrawRectangle(WIDTH - 20 - 2, HEIGHT / 2 - 25, 2, 50, RED);
+    leftPaddle.Draw();
+    rightPaddle.Draw();
 
     DrawFPS(0, 0);
     EndDrawing();
