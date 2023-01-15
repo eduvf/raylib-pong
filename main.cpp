@@ -43,7 +43,7 @@ int main() {
 
   Paddle rightPaddle;
   rightPaddle.x = WIDTH - 20;
-  rightPaddle.y = HEIGHT / 2;
+  rightPaddle.y = HEIGHT / 2.0f;
   rightPaddle.width = 5;
   rightPaddle.height = 50;
   rightPaddle.speed = 200;
